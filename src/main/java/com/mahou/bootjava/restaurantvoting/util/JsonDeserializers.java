@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mahou.bootjava.restaurantvoting.config.WebSecurityConfig;
+import lombok.experimental.UtilityClass;
 
 import java.io.IOException;
 
+@UtilityClass
 public class JsonDeserializers {
     // https://stackoverflow.com/a/60995048/548473
     public static class PasswordDeserializer extends JsonDeserializer<String> {

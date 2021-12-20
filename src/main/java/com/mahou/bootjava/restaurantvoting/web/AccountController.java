@@ -1,20 +1,66 @@
 package com.mahou.bootjava.restaurantvoting.web;
 
 import com.mahou.bootjava.restaurantvoting.AuthUser;
+import com.mahou.bootjava.restaurantvoting.model.Role;
 import com.mahou.bootjava.restaurantvoting.model.User;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
+import java.net.URI;
+import java.util.Set;
 
 @RestController
-@RequestMapping(value = "/api/account")
-public class AccountController {
+@RequestMapping(AccountController.URL)
+@AllArgsConstructor
+@Slf4j
+public class AccountController extends AbstractUserController {
+    static final String URL = "/api/account";
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public User get(@AuthenticationPrincipal AuthUser authUser) {
+        log.info("get {}", authUser);
         return authUser.getUser();
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = "users", key = "#authUser.username")
+    public void delete(@AuthenticationPrincipal AuthUser authUser) {
+        log.info("delete {}", authUser);
+        super.delete(authUser.getId());
+    }
+
+    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<User> register(@Valid @RequestBody User user) {
+        log.info("register {}", user);
+        user.setRoles(Set.of(Role.USER));
+        user = super.create(user);
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/account")
+                .build().toUri();
+        return ResponseEntity.created(uriOfNewResource).body(user);
+    }
+
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CachePut(value = "users", key = "#authUser.username")
+    public void update(@Valid @RequestBody User user, @AuthenticationPrincipal AuthUser authUser) {
+        log.info("update {} to {}", authUser, user);
+        User oldUser = authUser.getUser();
+        user.setRoles(oldUser.getRoles());
+        if (user.getPassword() == null) {
+            user.setPassword(oldUser.getPassword());
+        }
+        super.update(user, authUser.getId());
     }
 }
