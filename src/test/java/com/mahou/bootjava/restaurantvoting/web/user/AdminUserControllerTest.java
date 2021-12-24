@@ -1,6 +1,5 @@
 package com.mahou.bootjava.restaurantvoting.web.user;
 
-import com.mahou.bootjava.restaurantvoting.UserTestData;
 import com.mahou.bootjava.restaurantvoting.model.User;
 import com.mahou.bootjava.restaurantvoting.repository.UserRepository;
 import com.mahou.bootjava.restaurantvoting.web.AbstractControllerTest;
@@ -24,9 +23,9 @@ class AdminUserControllerTest extends AbstractControllerTest {
     private UserRepository userRepository;
 
     @Test
-    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(URL + UserTestData.USER_ID))
+        perform(MockMvcRequestBuilders.get(URL + USER_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -34,9 +33,9 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_MAIL)
     void getByEmail() throws Exception {
-        perform(MockMvcRequestBuilders.get(URL + "by?email=" + UserTestData.ADMIN_MAIL))
+        perform(MockMvcRequestBuilders.get(URL + "by?email=" + ADMIN_MAIL))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -44,7 +43,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_MAIL)
     void getAll() throws Exception {
         perform(MockMvcRequestBuilders.get(URL))
                 .andExpect(status().isOk())
@@ -54,26 +53,26 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = UserTestData.USER_MAIL)
+    @WithUserDetails(value = USER_MAIL)
     void getForbidden() throws Exception {
         perform(MockMvcRequestBuilders.get(URL))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(URL + UserTestData.USER_ID))
+        perform(MockMvcRequestBuilders.delete(URL + USER_ID))
                 .andExpect(status().isNoContent());
-        Assertions.assertFalse(userRepository.findById(UserTestData.USER_ID).isPresent());
-        Assertions.assertTrue(userRepository.findById(UserTestData.ADMIN_ID).isPresent());
+        Assertions.assertFalse(userRepository.findById(USER_ID).isPresent());
+        Assertions.assertTrue(userRepository.findById(ADMIN_ID).isPresent());
     }
 
     @Test
-    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocation() throws Exception {
-        User newUser = UserTestData.getNew();
-        User created = UserTestData.asUser(perform(MockMvcRequestBuilders.post(URL)
+        User newUser = getNew();
+        User created = asUser(perform(MockMvcRequestBuilders.post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(newUser, newUser.getPassword())))
                 .andExpect(status().isCreated()).andReturn());
@@ -84,13 +83,13 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
+    @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
-        User updated = UserTestData.getUpdated();
-        perform(MockMvcRequestBuilders.put(URL + UserTestData.USER_ID)
+        User updated = getUpdated();
+        perform(MockMvcRequestBuilders.put(URL + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
-        USER_MATCHER.assertMatch(updated, userRepository.findById(UserTestData.USER_ID).orElseThrow());
+        USER_MATCHER.assertMatch(updated, userRepository.findById(USER_ID).orElseThrow());
     }
 }

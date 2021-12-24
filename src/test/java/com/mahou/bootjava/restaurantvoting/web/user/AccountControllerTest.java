@@ -24,7 +24,7 @@ class AccountControllerTest extends AbstractControllerTest {
     private UserRepository userRepository;
 
     @Test
-    @WithUserDetails(value = UserTestData.USER_MAIL)
+    @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(URL))
                 .andExpect(status().isOk())
@@ -40,7 +40,7 @@ class AccountControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = UserTestData.USER_MAIL)
+    @WithUserDetails(value = USER_MAIL)
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(URL))
                 .andExpect(status().isNoContent());
@@ -63,7 +63,7 @@ class AccountControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = UserTestData.USER_MAIL)
+    @WithUserDetails(value = USER_MAIL)
     void update() throws Exception {
         User updated = getUpdated();
         perform(MockMvcRequestBuilders.put(URL)
