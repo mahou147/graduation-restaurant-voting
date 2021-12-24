@@ -27,7 +27,7 @@ public class AdminUserController extends AbstractUserController {
         return super.get(id);
     }
 
-    @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/by", produces = MediaType.APPLICATION_JSON_VALUE)
     public Optional<User> getByMail(@RequestParam String email) {
         return super.findByEmailIgnoreCase(email);
     }

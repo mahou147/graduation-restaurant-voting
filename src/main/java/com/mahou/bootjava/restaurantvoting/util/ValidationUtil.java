@@ -10,7 +10,7 @@ public class ValidationUtil {
 
     public static void checkNew(BaseEntity entity) {
         if (!entity.isNew()) {
-            throw new IllegalArgumentException(entity + " must be new (id=null)");
+            throw new IllegalRequestDataException(entity.getClass().getSimpleName() + " must be new (id=null)");
         }
     }
 

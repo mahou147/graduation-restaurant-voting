@@ -40,7 +40,6 @@ public class AccountController extends AbstractUserController {
     }
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<User> register(@Valid @RequestBody User user) {
         log.info("register {}", user);
         user.setRoles(Set.of(Role.USER));

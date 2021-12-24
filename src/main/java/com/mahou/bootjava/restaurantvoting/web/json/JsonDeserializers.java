@@ -1,4 +1,4 @@
-package com.mahou.bootjava.restaurantvoting.util;
+package com.mahou.bootjava.restaurantvoting.web.json;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;

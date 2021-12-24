@@ -1,5 +1,6 @@
 #  https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 spring:
+  cache.type: none
   jpa:
     show-sql: true
     open-in-view: false
@@ -20,3 +21,16 @@ spring:
     username: sa
     password:
   h2.console.enabled: true
+
+  # Jackson Serialization Issue Resolver
+  jackson:
+    visibility.field: any
+    visibility.getter: none
+    visibility.setter: none
+    visibility.is-getter: none
+
+logging:
+  level:
+    root: WARN
+    ru.graduation.bootjava.: DEBUG
+#    org.springframework.security.web.FilterChainProxy: DEBUG

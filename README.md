@@ -1,1 +1,2 @@
-# graduation-restaurant-voting
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/a5b727a2118e4799a8280574a513a946)](https://www.codacy.com/gh/mahou147/graduation-restaurant-voting/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mahou147/graduation-restaurant-voting&amp;utm_campaign=Badge_Grade)
+# Restaurant voting:  Graduation project from the [TopJava](https://javaops.ru/view/topjava) internship
