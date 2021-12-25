@@ -3,7 +3,6 @@ package com.mahou.bootjava.restaurantvoting.service;
 import com.mahou.bootjava.restaurantvoting.model.User;
 import com.mahou.bootjava.restaurantvoting.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -13,7 +12,8 @@ import org.springframework.util.Assert;
 
 import java.util.Optional;
 
-@Slf4j
+import static com.mahou.bootjava.restaurantvoting.util.ValidationUtil.checkNotFoundWithId;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -21,7 +21,6 @@ public class UserService {
     private final UserRepository repository;
 
     public Optional<User> findById(int id) {
-        log.info("get user {}", id);
         return repository.findById(id);
     }
 
@@ -32,7 +31,6 @@ public class UserService {
 
     @Cacheable("users")
     public Page<User> findPage(int pageIndex, int pageSize) {
-        log.info("get all users");
         return repository.findAll(PageRequest.of(pageIndex, pageSize));
     }
 
@@ -48,8 +46,8 @@ public class UserService {
     }
 
     @CacheEvict(value = "users", allEntries = true)
-    public void update(User user) {
+    public User update(User user) {
         Assert.notNull(user, "user must not be null");
-        repository.save(user);
+        return checkNotFoundWithId(repository.save(user), user.id());
     }
 }

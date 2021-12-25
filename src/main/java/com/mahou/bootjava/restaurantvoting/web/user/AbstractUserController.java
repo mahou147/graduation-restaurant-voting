@@ -1,16 +1,16 @@
-package com.mahou.bootjava.restaurantvoting.web;
+package com.mahou.bootjava.restaurantvoting.web.user;
 
+import com.mahou.bootjava.restaurantvoting.error.NotFoundException;
 import com.mahou.bootjava.restaurantvoting.model.User;
 import com.mahou.bootjava.restaurantvoting.service.UserService;
 import com.mahou.bootjava.restaurantvoting.util.ValidationUtil;
-import com.mahou.bootjava.restaurantvoting.error.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 
 import java.util.Optional;
 
-import static com.mahou.bootjava.restaurantvoting.util.ValidationUtil.*;
+import static com.mahou.bootjava.restaurantvoting.util.ValidationUtil.assureIdConsistent;
 
 @Slf4j
 public abstract class AbstractUserController {
@@ -29,7 +29,7 @@ public abstract class AbstractUserController {
 
     public Page<User> findPage(int pageIndex) {
         log.info("getAll");
-        return service.findPage(pageIndex -1, 5);
+        return service.findPage(pageIndex - 1, 5);
     }
 
     public void delete(int id) {

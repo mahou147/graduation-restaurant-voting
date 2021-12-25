@@ -1,6 +1,5 @@
 #  https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 spring:
-  cache.type: none
   jpa:
     show-sql: true
     open-in-view: false
@@ -28,9 +27,13 @@ spring:
     visibility.getter: none
     visibility.setter: none
     visibility.is-getter: none
+  cache:
+    cache-names: users, restaurants, menus
+    caffeine:
+      spec: maximumSize=500,expireAfterAccess=600s
 
 logging:
   level:
     root: WARN
-    ru.graduation.bootjava.: DEBUG
+    com.mahou.bootjava.restaurantvoting: INFO
 #    org.springframework.security.web.FilterChainProxy: DEBUG

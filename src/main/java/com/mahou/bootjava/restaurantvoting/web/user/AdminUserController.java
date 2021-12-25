@@ -1,4 +1,4 @@
-package com.mahou.bootjava.restaurantvoting.web;
+package com.mahou.bootjava.restaurantvoting.web.user;
 
 import com.mahou.bootjava.restaurantvoting.model.User;
 import lombok.AllArgsConstructor;
