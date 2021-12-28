@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,7 +49,7 @@ public class AdminMenuController {
 
     @Transactional
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Menu> createWithLocationAndDishes(@RequestBody Menu menu) {
+    public ResponseEntity<Menu> createWithLocationAndDishes(@Valid @RequestBody Menu menu) {
         Menu created = service.create(menu);
         List<Dish> dishes = menu.getDishes();
         dishes.forEach(dish -> dish.setMenu(menu));
@@ -66,7 +67,7 @@ public class AdminMenuController {
     @Transactional
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateWithDishes(@RequestBody Menu menu, @PathVariable int id) {
+    public void updateWithDishes(@Valid @RequestBody Menu menu, @PathVariable int id) {
         service.update(menu, id);
     }
 }

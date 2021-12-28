@@ -15,7 +15,7 @@ import java.net.URI;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(AdminUserController.URL)
+@RequestMapping(value = AdminUserController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 @Slf4j
 public class AdminUserController extends AbstractUserController {
@@ -27,7 +27,7 @@ public class AdminUserController extends AbstractUserController {
         return super.get(id);
     }
 
-    @GetMapping(value = "/by", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/by")
     public Optional<User> getByMail(@RequestParam String email) {
         return super.findByEmailIgnoreCase(email);
     }

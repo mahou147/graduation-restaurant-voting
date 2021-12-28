@@ -1,5 +1,7 @@
 package com.mahou.bootjava.restaurantvoting.web.user;
 
+import com.mahou.bootjava.restaurantvoting.error.ErrorType;
+import com.mahou.bootjava.restaurantvoting.model.Role;
 import com.mahou.bootjava.restaurantvoting.model.User;
 import com.mahou.bootjava.restaurantvoting.repository.UserRepository;
 import com.mahou.bootjava.restaurantvoting.web.AbstractControllerTest;
@@ -11,10 +13,12 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.EnumSet;
+
 import static com.mahou.bootjava.restaurantvoting.UserTestData.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static com.mahou.bootjava.restaurantvoting.error.ErrorType.VALIDATION_ERROR;
 
 class AdminUserControllerTest extends AbstractControllerTest {
     static final String URL = "/api/admin/users/";
@@ -40,6 +44,14 @@ class AdminUserControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(USER_MATCHER.contentJson(admin));
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.get(URL + NOT_FOUND))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -91,5 +103,30 @@ class AdminUserControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
         USER_MATCHER.assertMatch(updated, userRepository.findById(USER_ID).orElseThrow());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void createInvalid() throws Exception {
+        User invalid = new User(null, "", "", "pass", "", EnumSet.of(Role.USER, Role.ADMIN));
+        perform(MockMvcRequestBuilders.post(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(invalid, "newPass")))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void updateInvalid() throws Exception {
+        User invalid = new User(user);
+        invalid.setFirstName("");
+        perform(MockMvcRequestBuilders.put(URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(invalid, "password")))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
     }
 }

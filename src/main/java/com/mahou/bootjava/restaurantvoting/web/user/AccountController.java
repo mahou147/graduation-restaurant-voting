@@ -17,13 +17,13 @@ import java.net.URI;
 import java.util.Set;
 
 @RestController
-@RequestMapping(AccountController.URL)
+@RequestMapping(value = AccountController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 @Slf4j
 public class AccountController extends AbstractUserController {
     static final String URL = "/api/account";
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public User get(@AuthenticationPrincipal AuthUser authUser) {
         log.info("get {}", authUser);
         return authUser.getUser();

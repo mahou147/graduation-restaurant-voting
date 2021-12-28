@@ -34,7 +34,7 @@ CREATE TABLE RESTAURANT
     phone       VARCHAR(15)  NOT NULL,
     PRIMARY KEY (id)
 );
-CREATE UNIQUE INDEX restaurants_unique_address_idx ON RESTAURANT (address);
+CREATE UNIQUE INDEX restaurant_unique_address_idx ON RESTAURANT (address);
 
 CREATE TABLE MENU
 (
@@ -54,7 +54,7 @@ CREATE TABLE DISH
     PRIMARY KEY (id),
     FOREIGN KEY (menu_id) REFERENCES MENU (id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX dish_unique_menu_title_idx
+CREATE UNIQUE INDEX dish_unique_dish_title_idx
     ON DISH (menu_id, title);
 
 CREATE TABLE VOTE

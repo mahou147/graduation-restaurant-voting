@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -26,20 +27,23 @@ public class User extends BaseEntity implements Serializable {
 
     @Column(name = "email", nullable = false, unique = true)
     @Email
-    @NotEmpty
+    @NotBlank
     @Size(max = 128)
     private String email;
 
     @Column(name = "first_name")
+    @NotBlank
     @Size(max = 128)
     private String firstName;
 
+    @NotBlank
     @Column(name = "last_name")
     @Size(max = 128)
     private String lastName;
 
     @Column(name = "password")
-    @Size(max = 256)
+    @NotBlank
+    @Size(min = 5, max = 100)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JsonDeserialize(using = JsonDeserializers.PasswordDeserializer.class)
     private String password;
@@ -50,6 +54,10 @@ public class User extends BaseEntity implements Serializable {
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
+
+    public User(User u) {
+        this(u.id, u.email, u.firstName, u.lastName, u.password, u.roles);
+    }
 
     public User(Integer id, String email, String firstName, String lastName, String password, Collection<Role> roles) {
         this(email, firstName, lastName, password, EnumSet.copyOf(roles));
