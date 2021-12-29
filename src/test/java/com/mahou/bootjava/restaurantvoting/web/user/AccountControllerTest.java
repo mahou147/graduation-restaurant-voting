@@ -1,21 +1,25 @@
 package com.mahou.bootjava.restaurantvoting.web.user;
 
-import com.mahou.bootjava.restaurantvoting.UserTestData;
+import com.mahou.bootjava.restaurantvoting.model.Role;
 import com.mahou.bootjava.restaurantvoting.model.User;
 import com.mahou.bootjava.restaurantvoting.repository.UserRepository;
 import com.mahou.bootjava.restaurantvoting.web.AbstractControllerTest;
+import com.mahou.bootjava.restaurantvoting.web.json.JsonUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.EnumSet;
+
 import static com.mahou.bootjava.restaurantvoting.UserTestData.*;
+import static com.mahou.bootjava.restaurantvoting.error.ErrorType.VALIDATION_ERROR;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.junit.jupiter.api.Assertions.*;
-import static com.mahou.bootjava.restaurantvoting.web.json.JsonUtil.*;
 
 class AccountControllerTest extends AbstractControllerTest {
     static final String URL = "/api/account";
@@ -59,7 +63,7 @@ class AccountControllerTest extends AbstractControllerTest {
         int newId = registered.id();
         newUser.setId(newId);
         USER_MATCHER.assertMatch(registered, newUser);
-        USER_MATCHER.assertMatch(userRepository.getById(newId), newUser);
+        USER_MATCHER.assertMatch(userRepository.findById(newId).orElseThrow(), newUser);
     }
 
     @Test
@@ -68,9 +72,31 @@ class AccountControllerTest extends AbstractControllerTest {
         User updated = getUpdated();
         perform(MockMvcRequestBuilders.put(URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(updated)))
-                .andDo(print())
+                .content(jsonWithPassword(updated, updated.getPassword())))
                 .andExpect(status().isNoContent());
-        USER_MATCHER.assertMatch(updated, userRepository.findById(USER_ID).orElseThrow());
+        USER_MATCHER.assertMatch(userRepository.findById(USER_ID).orElseThrow(), updated);
+    }
+
+    @Test
+    void registerInvalid() throws Exception {
+        User invalid = getInvalidCreated();
+        perform(MockMvcRequestBuilders.post(URL + "/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(invalid)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
+    @Test
+    @WithUserDetails(value = USER_MAIL)
+    void updateInvalid() throws Exception {
+        User invalid = new User(null, null, null, "password", "", EnumSet.of(Role.USER));
+        perform(MockMvcRequestBuilders.put(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(invalid, invalid.getPassword())))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
     }
 }

@@ -3,6 +3,7 @@ package com.mahou.bootjava.restaurantvoting.service;
 import com.mahou.bootjava.restaurantvoting.error.NotFoundException;
 import com.mahou.bootjava.restaurantvoting.model.Restaurant;
 import com.mahou.bootjava.restaurantvoting.repository.RestaurantRepository;
+import com.mahou.bootjava.restaurantvoting.to.RestaurantTo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -25,15 +26,15 @@ public class RestaurantService {
 
     private final RestaurantRepository repository;
 
-    public Restaurant findById(int id) {
+    public RestaurantTo getById(int id) {
         log.info("get {}", id);
-        return repository.findById(id).orElseThrow(() -> new NotFoundException("Restaurant not found, id: " + id));
+        return repository.getById(id).orElseThrow(() -> new NotFoundException("Restaurant not found, id: " + id));
     }
 
     @Cacheable("restaurants")
-    public Page<Restaurant> findPage(int pageIndex, int pageSize) {
+    public Page<RestaurantTo> findPage(int pageIndex, int pageSize) {
         log.info("getAll");
-        return repository.findAll(PageRequest.of(pageIndex, pageSize));
+        return repository.getAll(PageRequest.of(pageIndex, pageSize));
     }
 
     public Restaurant getWithMenuOfTheDay(int id) {

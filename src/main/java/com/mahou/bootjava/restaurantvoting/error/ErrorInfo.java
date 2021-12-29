@@ -1,5 +1,8 @@
 package com.mahou.bootjava.restaurantvoting.error;
 
+import lombok.Getter;
+
+@Getter
 public class ErrorInfo {
     private final String url;
     private final ErrorType type;

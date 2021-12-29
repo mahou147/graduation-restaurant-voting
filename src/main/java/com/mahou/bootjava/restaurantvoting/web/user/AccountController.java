@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -37,7 +38,7 @@ public class AccountController extends AbstractUserController {
     }
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> register(@Valid @RequestBody User user) {
+    public ResponseEntity<User> register(@Validated(User.BasicValidation.class) @RequestBody User user) {
         log.info("register {}", user);
         user.setRoles(Set.of(Role.USER));
         user = super.create(user);

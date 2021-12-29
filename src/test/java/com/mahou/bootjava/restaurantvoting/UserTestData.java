@@ -1,6 +1,5 @@
 package com.mahou.bootjava.restaurantvoting;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mahou.bootjava.restaurantvoting.model.Role;
 import com.mahou.bootjava.restaurantvoting.model.User;
 import com.mahou.bootjava.restaurantvoting.web.json.JsonUtil;
@@ -25,12 +24,16 @@ public class UserTestData {
 
     public static User getNew() {
         return new User(null, "new@gmail.com", "New_First", "New_Last",
-                "newpass", List.of(Role.USER));
+                "newpass", EnumSet.of(Role.USER));
     }
 
     public static User getUpdated() {
         return new User(USER_ID, "user_update@gmail.com", "User_First_Update", "User_Last_Update",
-                "password_update", List.of(Role.USER));
+                "password_update", EnumSet.of(Role.USER));
+    }
+
+    public static User getInvalidCreated() {
+        return new User(null, null, null, null, null, EnumSet.of(Role.USER));
     }
 
     public static User asUser(MvcResult mvcResult) throws UnsupportedEncodingException {

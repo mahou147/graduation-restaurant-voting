@@ -36,13 +36,11 @@ spring:
     allow-bean-definition-overriding: true
   mvc:
     throw-exception-if-no-handler-found: true
-  messages:
-   basename: messages
 
 logging:
   level:
     root: WARN
-    com.mahou.bootjava.restaurantvoting: INFO
+    com.mahou.bootjava.restaurantvoting: DEBUG
 #    org.springframework.security.web.FilterChainProxy: DEBUG
 
 server:

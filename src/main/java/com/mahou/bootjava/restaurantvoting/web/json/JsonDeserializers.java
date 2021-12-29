@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mahou.bootjava.restaurantvoting.config.WebSecurityConfig;
+import com.mahou.bootjava.restaurantvoting.util.ValidationUtil;
 import lombok.experimental.UtilityClass;
 
 import java.io.IOException;

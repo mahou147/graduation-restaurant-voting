@@ -7,6 +7,8 @@ import com.mahou.bootjava.restaurantvoting.util.ValidationUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 
 import java.util.Optional;
 
@@ -16,6 +18,14 @@ import static com.mahou.bootjava.restaurantvoting.util.ValidationUtil.assureIdCo
 public abstract class AbstractUserController {
     @Autowired
     private UserService service;
+
+    @Autowired
+    private UniqueMailValidator emailValidator;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(emailValidator);
+    }
 
     public User get(int id) {
         log.info("get {}", id);

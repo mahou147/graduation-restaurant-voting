@@ -1,7 +1,5 @@
 package com.mahou.bootjava.restaurantvoting.web.user;
 
-import com.mahou.bootjava.restaurantvoting.error.ErrorType;
-import com.mahou.bootjava.restaurantvoting.model.Role;
 import com.mahou.bootjava.restaurantvoting.model.User;
 import com.mahou.bootjava.restaurantvoting.repository.UserRepository;
 import com.mahou.bootjava.restaurantvoting.web.AbstractControllerTest;
@@ -13,12 +11,11 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.EnumSet;
-
 import static com.mahou.bootjava.restaurantvoting.UserTestData.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static com.mahou.bootjava.restaurantvoting.error.ErrorType.VALIDATION_ERROR;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class AdminUserControllerTest extends AbstractControllerTest {
     static final String URL = "/api/admin/users/";
@@ -91,7 +88,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
-        USER_MATCHER.assertMatch(created, userRepository.findById(newId).orElseThrow());
+        USER_MATCHER.assertMatch(userRepository.findById(newId).orElseThrow(), created);
     }
 
     @Test
@@ -100,18 +97,18 @@ class AdminUserControllerTest extends AbstractControllerTest {
         User updated = getUpdated();
         perform(MockMvcRequestBuilders.put(URL + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
+                .content(jsonWithPassword(updated, updated.getPassword())))
                 .andExpect(status().isNoContent());
-        USER_MATCHER.assertMatch(updated, userRepository.findById(USER_ID).orElseThrow());
+        USER_MATCHER.assertMatch(userRepository.findById(USER_ID).orElseThrow(), updated);
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
-        User invalid = new User(null, "", "", "pass", "", EnumSet.of(Role.USER, Role.ADMIN));
+        User invalid = getInvalidCreated();
         perform(MockMvcRequestBuilders.post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(invalid, "newPass")))
+                .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(errorType(VALIDATION_ERROR));

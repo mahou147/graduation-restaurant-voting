@@ -2,6 +2,7 @@ package com.mahou.bootjava.restaurantvoting.web.restaurant;
 
 import com.mahou.bootjava.restaurantvoting.model.Restaurant;
 import com.mahou.bootjava.restaurantvoting.service.RestaurantService;
+import com.mahou.bootjava.restaurantvoting.to.RestaurantTo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -27,12 +28,12 @@ public class AdminRestaurantController {
     private RestaurantService service;
 
     @GetMapping("/{id}")
-    public Restaurant get(@PathVariable int id) {
-        return service.findById(id);
+    public RestaurantTo get(@PathVariable int id) {
+        return service.getById(id);
     }
 
     @GetMapping
-    public Page<Restaurant> getAll(@RequestParam(name = "p", defaultValue = "1") int pageIndex) {
+    public Page<RestaurantTo> getAll(@RequestParam(name = "p", defaultValue = "1") int pageIndex) {
         return service.findPage(pageIndex - 1, 5);
     }
 
