@@ -7,11 +7,13 @@ DROP TABLE IF EXISTS RESTAURANT;
 
 CREATE TABLE USERS
 (
-    id               INTEGER                 AUTO_INCREMENT,
-    email            VARCHAR(255)            NOT NULL,
-    first_name       VARCHAR(255)            NOT NULL,
-    last_name        VARCHAR(255)            NOT NULL,
-    password         VARCHAR(255)            NOT NULL,
+    id               INTEGER            AUTO_INCREMENT,
+    email            VARCHAR            NOT NULL,
+    first_name       VARCHAR            NOT NULL,
+    last_name        VARCHAR            NOT NULL,
+    enabled          BOOL               DEFAULT TRUE  NOT NULL,
+    registered       TIMESTAMP          DEFAULT now() NOT NULL,
+    password         VARCHAR            NOT NULL,
     PRIMARY KEY (id)
 );
 CREATE UNIQUE INDEX user_unique_email_idx
@@ -21,7 +23,7 @@ CREATE UNIQUE INDEX user_unique_email_idx
 CREATE TABLE USER_ROLE
 (
     user_id INTEGER NOT NULL,
-    role    VARCHAR(255),
+    role    VARCHAR,
     CONSTRAINT user_role_idx UNIQUE (user_id, role),
     FOREIGN KEY (user_id) REFERENCES USERS (id) ON DELETE CASCADE
 );
@@ -29,9 +31,9 @@ CREATE TABLE USER_ROLE
 CREATE TABLE RESTAURANT
 (
     id          INTEGER      AUTO_INCREMENT,
-    title       VARCHAR(255) NOT NULL,
-    address     VARCHAR(255) NOT NULL,
-    phone       VARCHAR(15)  NOT NULL,
+    title       VARCHAR      NOT NULL,
+    address     VARCHAR      NOT NULL,
+    phone       VARCHAR      NOT NULL,
     PRIMARY KEY (id)
 );
 CREATE UNIQUE INDEX restaurant_unique_address_idx ON RESTAURANT (address);
@@ -48,8 +50,8 @@ CREATE TABLE MENU
 CREATE TABLE DISH
 (
     id                INTEGER                    AUTO_INCREMENT,
-    title             VARCHAR(255)               NOT NULL,
-    price             INT                        NOT NULL,
+    title             VARCHAR                    NOT NULL,
+    price             DECIMAL                    NOT NULL,
     menu_id           INTEGER                    NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (menu_id) REFERENCES MENU (id) ON DELETE CASCADE

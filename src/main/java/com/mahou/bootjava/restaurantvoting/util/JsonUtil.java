@@ -1,19 +1,27 @@
-package com.mahou.bootjava.restaurantvoting.web.json;
+package com.mahou.bootjava.restaurantvoting.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import lombok.experimental.UtilityClass;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.mahou.bootjava.restaurantvoting.web.json.JacksonObjectMapper.getMapper;
-
+@UtilityClass
 public class JsonUtil {
+
+    private static ObjectMapper mapper;
+
+    public static void setObjectMapper(ObjectMapper mapper) {
+        JsonUtil.mapper = mapper;
+    }
+
     public static <T> List<T> readValues(String json, Class<T> clazz) {
-        ObjectReader reader = getMapper().readerFor(clazz);
+        ObjectReader reader = mapper.readerFor(clazz);
         try {
             return reader.<T>readValues(json).readAll();
         } catch (IOException e) {
@@ -22,18 +30,18 @@ public class JsonUtil {
     }
 
     public static <T> List<T> readNoPageableValues(String json, Class<T> clazz) throws IOException {
-        Map<String, Object> objectMap = getMapper().readValue(json, Map.class);
+        Map<String, Object> objectMap = mapper.readValue(json, Map.class);
         List<Object> content = (List<Object>) objectMap.remove("content");
         List<T> result = new ArrayList<>();
         for (Object o : content) {
-            result.add(getMapper().convertValue(o, clazz));
+            result.add(mapper.convertValue(o, clazz));
         }
         return result;
     }
 
     public static <T> T readValue(String json, Class<T> clazz) {
         try {
-            return getMapper().readValue(json, clazz);
+            return mapper.readValue(json, clazz);
         } catch (IOException e) {
             throw new IllegalArgumentException("Invalid read from JSON:\n'" + json + "'", e);
         }
@@ -41,7 +49,7 @@ public class JsonUtil {
 
     public static <T> String writeValue(T obj) {
         try {
-            return getMapper().writeValueAsString(obj);
+            return mapper.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Invalid write to JSON:\n'" + obj + "'", e);
         }
@@ -52,7 +60,7 @@ public class JsonUtil {
     }
 
     public static <T> String writeAdditionProps(T obj, Map<String, Object> addProps) {
-        Map<String, Object> map = getMapper().convertValue(obj, new TypeReference<>() {
+        Map<String, Object> map = mapper.convertValue(obj, new TypeReference<>() {
         });
         map.putAll(addProps);
         return writeValue(map);

@@ -1,14 +1,17 @@
 package com.mahou.bootjava.restaurantvoting.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mahou.bootjava.restaurantvoting.AuthUser;
 import com.mahou.bootjava.restaurantvoting.model.Role;
 import com.mahou.bootjava.restaurantvoting.model.User;
 import com.mahou.bootjava.restaurantvoting.repository.UserRepository;
+import com.mahou.bootjava.restaurantvoting.util.JsonUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,10 +19,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
+
+import static com.mahou.bootjava.restaurantvoting.util.UserUtil.PASSWORD_ENCODER;
 
 @Configuration
 @EnableWebSecurity
@@ -27,14 +30,25 @@ import java.util.Optional;
 @AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final UserRepository userRepository;
 
+    @Autowired
+    private void setMapper(ObjectMapper objectMapper) {
+        JsonUtil.setObjectMapper(objectMapper);
+    }
+
     @Bean
-    public UserDetailsService userDetailsService() {
+    @Override
+    // https://stackoverflow.com/a/70176629/548473
+    public UserDetailsService userDetailsServiceBean() throws Exception {
+        return super.userDetailsServiceBean();
+    }
+
+    @Override
+    protected UserDetailsService userDetailsService() {
         return email -> {
             log.debug("Authenticating '{}'", email);
-            Optional<User> optionalUser = userRepository.findByEmailIgnoreCase(email.toLowerCase());
+            Optional<User> optionalUser = userRepository.findByEmailIgnoreCase(email);
             return new AuthUser(optionalUser.orElseThrow(
                     () -> new UsernameNotFoundException("User '" + email + "' was not found")));
         };
@@ -49,9 +63,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/api/account/register").anonymous()
                 .antMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
-                .antMatchers("/api/**").hasRole(Role.USER.name())
+                .antMatchers(HttpMethod.POST, "/api/profile").anonymous()
+                .antMatchers("/api/**").authenticated()
                 .and().httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();

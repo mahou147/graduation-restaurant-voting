@@ -1,19 +1,22 @@
 package com.mahou.bootjava.restaurantvoting.web.json;
 
+import com.mahou.bootjava.restaurantvoting.UserTestData;
 import com.mahou.bootjava.restaurantvoting.model.User;
-import org.assertj.core.api.Assertions;
+import com.mahou.bootjava.restaurantvoting.util.JsonUtil;
+import com.mahou.bootjava.restaurantvoting.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static com.mahou.bootjava.restaurantvoting.UserTestData.*;
-import static com.mahou.bootjava.restaurantvoting.config.WebSecurityConfig.PASSWORD_ENCODER;
-import static com.mahou.bootjava.restaurantvoting.web.json.JsonUtil.*;
+import static com.mahou.bootjava.restaurantvoting.util.JsonUtil.*;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JsonUtilTest {
+public class JsonUtilTest extends AbstractControllerTest {
+
     @Test
     void readWriteValue() {
         String json = writeValue(user);
@@ -32,13 +35,12 @@ public class JsonUtilTest {
 
     @Test
     void writeOnlyAccess() {
-        String json = writeValue(user);
+        String json = JsonUtil.writeValue(UserTestData.user);
         System.out.println(json);
         assertThat(json, not(containsString("password")));
-        String jsonWithPass = jsonWithPassword(user, "newPass");
+        String jsonWithPass = UserTestData.jsonWithPassword(UserTestData.user, "newPass");
         System.out.println(jsonWithPass);
-        User user = readValue(jsonWithPass, User.class);
-        String encodedPassword = user.getPassword();
-        Assertions.assertThat(PASSWORD_ENCODER.matches("newPass", encodedPassword)).isTrue();
+        User user = JsonUtil.readValue(jsonWithPass, User.class);
+        assertEquals(user.getPassword(), "newPass");
     }
 }

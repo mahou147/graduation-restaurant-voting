@@ -1,6 +1,5 @@
 package com.mahou.bootjava.restaurantvoting.to;
 
-import com.mahou.bootjava.restaurantvoting.model.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -14,7 +13,7 @@ import java.io.Serializable;
 @ToString
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class RestaurantTo extends BaseEntity implements Serializable {
+public class RestaurantTo extends BaseTo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 

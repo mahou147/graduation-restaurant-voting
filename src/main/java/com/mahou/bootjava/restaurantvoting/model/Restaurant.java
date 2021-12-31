@@ -24,6 +24,7 @@ public class Restaurant extends BaseEntity {
     @Size(max = 128)
     private String title;
 
+    @NotBlank
     @Column(name = "address", nullable = false, unique = true)
     @Size(max = 128)
     private String address;

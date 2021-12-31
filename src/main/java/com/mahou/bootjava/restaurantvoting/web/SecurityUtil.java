@@ -1,6 +1,7 @@
-package com.mahou.bootjava.restaurantvoting.util;
+package com.mahou.bootjava.restaurantvoting.web;
 
 import com.mahou.bootjava.restaurantvoting.AuthUser;
+import com.mahou.bootjava.restaurantvoting.model.User;
 import lombok.experimental.UtilityClass;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +24,11 @@ public class SecurityUtil {
         return requireNonNull(safeGet(), "No authorized user found");
     }
 
-    public static int authUserId() {
-        return get().getId();
+    public static User authUser() {
+        return get().getUser();
+    }
+
+    public static int authId() {
+        return get().getUser().id();
     }
 }

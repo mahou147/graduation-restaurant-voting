@@ -1,24 +1,24 @@
 package com.mahou.bootjava.restaurantvoting.to;
 
 import com.mahou.bootjava.restaurantvoting.HasId;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.sun.istack.NotNull;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
+@Value
 @ToString
-@NoArgsConstructor
-public class VoteTo implements HasId {
-    private Integer id;
+@EqualsAndHashCode(callSuper = true)
+public class VoteTo extends BaseTo implements HasId {
 
-    private LocalDate date;
+    @NotNull
+    LocalDate date;
 
-    private Integer restaurantId;
+    @NotNull
+    Integer restaurantId;
 
     public VoteTo(Integer id, LocalDate date, Integer restaurantId) {
-        this.id = id;
+        super(id);
         this.date = date;
         this.restaurantId = restaurantId;
     }

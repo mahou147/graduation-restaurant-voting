@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -27,8 +28,8 @@ public class AdminUserController extends AbstractUserController {
         return super.get(id);
     }
 
-    @GetMapping(value = "/by")
-    public Optional<User> getByMail(@RequestParam String email) {
+    @GetMapping(value = "/by-email")
+    public Optional<User> getByEmail(@RequestParam String email) {
         return super.findByEmailIgnoreCase(email);
     }
 
@@ -58,5 +59,14 @@ public class AdminUserController extends AbstractUserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody User user, @PathVariable int id) {
         super.update(user, id);
+    }
+
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void enable(@PathVariable int id, @RequestParam boolean enabled) {
+        log.info(enabled ? "enable {}" : "disable {}", id);
+        User user = super.get(id);
+        user.setEnabled(enabled);
     }
 }

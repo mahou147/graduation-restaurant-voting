@@ -44,7 +44,7 @@ public class MenuService {
     @CacheEvict(value = "menus", allEntries = true)
     public void deleteById(int id) {
         log.info("delete {}", id);
-        menuRepository.deleteById(id);
+        menuRepository.deleteExisted(id);
     }
 
     @Transactional

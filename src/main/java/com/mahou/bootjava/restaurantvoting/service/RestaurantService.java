@@ -39,12 +39,12 @@ public class RestaurantService {
 
     public Restaurant getWithMenuOfTheDay(int id) {
         log.info("get {} with menu of the day", id);
-        return repository.getWithMenuOfTheDay(id);
+        return checkNotFoundWithId(repository.getWithMenuOfTheDay(id), id);
     }
 
     public Restaurant getWithMenuArchive(int id) {
         log.info("get {} with menu archive", id);
-        return repository.getWithMenuArchive(id);
+        return checkNotFoundWithId(repository.getWithMenuArchive(id), id);
     }
 
     public List<Restaurant> getAllWithMenuOfTheDay() {
@@ -61,7 +61,7 @@ public class RestaurantService {
     @CacheEvict(value = "restaurants", allEntries = true)
     public void deleteById(int id) {
         log.info("delete {}", id);
-        repository.deleteById(id);
+        repository.deleteExisted(id);
     }
 
     @Transactional

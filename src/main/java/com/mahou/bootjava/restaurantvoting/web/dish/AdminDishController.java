@@ -41,7 +41,7 @@ public class AdminDishController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
-        repository.deleteById(id);
+        repository.deleteExisted(id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

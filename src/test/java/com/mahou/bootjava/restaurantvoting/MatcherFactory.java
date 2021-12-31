@@ -1,7 +1,8 @@
 package com.mahou.bootjava.restaurantvoting;
 
-import com.mahou.bootjava.restaurantvoting.web.json.JsonUtil;
+import com.mahou.bootjava.restaurantvoting.util.JsonUtil;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.io.UnsupportedEncodingException;
@@ -16,10 +17,10 @@ public class MatcherFactory {
         return new Matcher<>(clazz, assertion, iterableAssertion);
     }
 
-    public static <T> Matcher<T> usingEqualsComparator(Class<T> clazz) {
+    public static <T> Matcher<T> usingIgnoringFieldsComparator(Class<T> clazz, String... fieldsToIgnore) {
         return usingAssertions(clazz,
-                (a, e) -> assertThat(a).isEqualTo(e),
-                (a, e) -> assertThat(a).isEqualTo(e));
+                (a, e) -> assertThat(a).usingRecursiveComparison().ignoringFields(fieldsToIgnore).isEqualTo(e),
+                (a, e) -> assertThat(a).usingRecursiveFieldByFieldElementComparatorIgnoringFields(fieldsToIgnore).isEqualTo(e));
     }
 
     public static class Matcher<T> {
@@ -52,6 +53,10 @@ public class MatcherFactory {
 
         public ResultMatcher contentJsonWithoutPageable(Iterable<T> expected) {
             return result -> assertMatch(JsonUtil.readNoPageableValues(getContent(result), clazz), expected);
+        }
+
+        public T readFromJson(ResultActions action) throws UnsupportedEncodingException {
+            return JsonUtil.readValue(getContent(action.andReturn()), clazz);
         }
 
         private static String getContent(MvcResult result) throws UnsupportedEncodingException {

@@ -5,7 +5,7 @@ spring:
     open-in-view: false
     defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
     properties:
       #  http://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#configurations
       hibernate:
@@ -27,22 +27,30 @@ spring:
     visibility.getter: none
     visibility.setter: none
     visibility.is-getter: none
+
   cache:
     cache-names: users, restaurants, menus
     caffeine:
-      spec: maximumSize=500,expireAfterAccess=600s
-
+      spec: maximumSize=5000,expireAfterAccess=60s
   main:
     allow-bean-definition-overriding: true
+    allow-circular-references: true
   mvc:
     throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
 
 logging:
   level:
     root: WARN
-    com.mahou.bootjava.restaurantvoting: DEBUG
-#    org.springframework.security.web.FilterChainProxy: DEBUG
+    com.mahou.bootjava.restaurantvoting: INFO
+    org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
 
 server:
   servlet:
     register-default-servlet: true
+    encoding:
+      charset: UTF-8 # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly
+      enabled: true # Enable http encoding support
+      force: true

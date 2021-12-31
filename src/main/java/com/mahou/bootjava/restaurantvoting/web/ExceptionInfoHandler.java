@@ -1,9 +1,6 @@
 package com.mahou.bootjava.restaurantvoting.web;
 
-import com.mahou.bootjava.restaurantvoting.error.ErrorInfo;
-import com.mahou.bootjava.restaurantvoting.error.ErrorType;
-import com.mahou.bootjava.restaurantvoting.error.IllegalRequestDataException;
-import com.mahou.bootjava.restaurantvoting.error.NotFoundException;
+import com.mahou.bootjava.restaurantvoting.error.*;
 import com.mahou.bootjava.restaurantvoting.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +14,10 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -27,7 +27,7 @@ import static com.mahou.bootjava.restaurantvoting.error.ErrorType.*;
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE + 5)
 @RequiredArgsConstructor
-@RestControllerAdvice(annotations = RestController.class)
+@RestControllerAdvice
 public class ExceptionInfoHandler {
 
     public static final String EXCEPTION_DUPLICATE_EMAIL = "exception.user.duplicateEmail";
@@ -83,12 +83,21 @@ public class ExceptionInfoHandler {
         return logAndGetErrorInfo(req, e, true, APP_ERROR);
     }
 
+    @ExceptionHandler(AppException.class)
+    public ResponseEntity<ErrorInfo> appException(HttpServletRequest req, AppException e) {
+        return logAndGetErrorInfo(req, e, false, e.getType(), e.getMsgCode());
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ErrorInfo>  wrongRequest(HttpServletRequest req, NoHandlerFoundException e) {
+        return logAndGetErrorInfo(req, e, false, ErrorType.WRONG_REQUEST);
+    }
+
     //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
     public ResponseEntity<ErrorInfo> logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logStackTrace, ErrorType errorType, String... details) {
         Throwable rootCause = ValidationUtil.logAndGetRootCause(log, req, e, logStackTrace, errorType);
         return ResponseEntity.status(errorType.getStatus())
                 .body(new ErrorInfo(req.getRequestURL(), errorType,
-                        messageSourceAccessor.getMessage(errorType.getErrorCode()),
                         details.length != 0 ? details : new String[]{ValidationUtil.getMessage(rootCause)})
                 );
     }
