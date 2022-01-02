@@ -1,6 +1,7 @@
 package com.mahou.bootjava.restaurantvoting.repository;
 
 import com.mahou.bootjava.restaurantvoting.model.User;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;

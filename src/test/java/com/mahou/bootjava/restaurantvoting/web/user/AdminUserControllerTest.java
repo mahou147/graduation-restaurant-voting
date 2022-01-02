@@ -15,6 +15,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import static com.mahou.bootjava.restaurantvoting.UserTestData.*;
@@ -94,7 +96,8 @@ class AdminUserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocation() throws Exception {
-        User newUser = getNew();
+        User newUser = new User(null, "new@gmail.com", "NewName", "NewSurname",
+                "newPass", false, new Date(), Collections.singleton(Role.USER));
         ResultActions action = perform(MockMvcRequestBuilders.post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(newUser, "newPass")))
@@ -110,7 +113,8 @@ class AdminUserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
-        User updated = getUpdated();
+        User updated = new User(USER_ID, USER_MAIL, "UpdatedName", "UpdateSurname", "newPass",
+                false, new Date(), Collections.singleton(Role.ADMIN));
         perform(MockMvcRequestBuilders.put(URL + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(updated, updated.getPassword())))
@@ -121,7 +125,8 @@ class AdminUserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
-        User invalid = getInvalidCreated();
+        User invalid = new User(null, null, null, null, null, false, new Date(),
+                Collections.singleton(Role.USER));
         perform(MockMvcRequestBuilders.post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))

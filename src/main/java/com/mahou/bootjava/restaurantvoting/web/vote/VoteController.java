@@ -4,6 +4,7 @@ import com.mahou.bootjava.restaurantvoting.AuthUser;
 import com.mahou.bootjava.restaurantvoting.model.Vote;
 import com.mahou.bootjava.restaurantvoting.service.VoteService;
 import com.mahou.bootjava.restaurantvoting.to.VoteTo;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,17 +26,20 @@ public class VoteController {
 
     private final VoteService voteService;
 
+    @Operation(summary = "get authentication user`s Vote")
     @GetMapping
     public VoteTo findByUserId(@AuthenticationPrincipal AuthUser authUser) {
         return voteService.findByAuthUser(authUser);
     }
 
+    @Operation(summary = "delete authentication user`s Vote")
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
         voteService.deleteByAuthUser(authUser);
     }
 
+    @Operation(summary = "create authentication user`s Vote")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Vote> createWithLocation(@Valid @RequestBody Vote vote, @AuthenticationPrincipal AuthUser authUser) {
         Vote created = voteService.create(vote, authUser);
@@ -46,6 +50,7 @@ public class VoteController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @Operation(summary = "update authentication user`s Vote")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody Vote vote, @AuthenticationPrincipal AuthUser authUser) {

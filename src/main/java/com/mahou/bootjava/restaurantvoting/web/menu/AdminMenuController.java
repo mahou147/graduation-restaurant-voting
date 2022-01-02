@@ -4,6 +4,7 @@ import com.mahou.bootjava.restaurantvoting.model.Dish;
 import com.mahou.bootjava.restaurantvoting.model.Menu;
 import com.mahou.bootjava.restaurantvoting.service.MenuService;
 import com.mahou.bootjava.restaurantvoting.web.dish.AdminDishController;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -30,16 +31,19 @@ public class AdminMenuController {
 
     private final AdminDishController adminDishController;
 
+    @Operation(summary = "get Menu with dishes")
     @GetMapping("/{id}")
     public Menu getWithDishes(@PathVariable int id) {
         return service.getWithDishes(id);
     }
 
+    @Operation(summary = "get all Menus with dishes by restaurant")
     @GetMapping("/by-restaurant/{id}")
     public List<Menu> getAllWithDishesByRestaurantId(@PathVariable int id) {
         return service.getAllWithDishesByRestaurantId(id);
     }
 
+    @Operation(summary = "delete Menu with dishes")
     @Transactional
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -47,6 +51,7 @@ public class AdminMenuController {
         service.deleteById(id);
     }
 
+    @Operation(summary = "create Menu with dishes")
     @Transactional
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Menu> createWithLocationAndDishes(@Valid @RequestBody Menu menu) {
@@ -64,6 +69,7 @@ public class AdminMenuController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @Operation(summary = "update Menu and dishes")
     @Transactional
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)

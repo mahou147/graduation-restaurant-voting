@@ -2,7 +2,6 @@ package com.mahou.bootjava.restaurantvoting.web.json;
 
 import com.mahou.bootjava.restaurantvoting.UserTestData;
 import com.mahou.bootjava.restaurantvoting.model.User;
-import com.mahou.bootjava.restaurantvoting.util.JsonUtil;
 import com.mahou.bootjava.restaurantvoting.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
 
@@ -35,12 +34,12 @@ public class JsonUtilTest extends AbstractControllerTest {
 
     @Test
     void writeOnlyAccess() {
-        String json = JsonUtil.writeValue(UserTestData.user);
+        String json = writeValue(UserTestData.user);
         System.out.println(json);
         assertThat(json, not(containsString("password")));
         String jsonWithPass = UserTestData.jsonWithPassword(UserTestData.user, "newPass");
         System.out.println(jsonWithPass);
-        User user = JsonUtil.readValue(jsonWithPass, User.class);
+        User user = readValue(jsonWithPass, User.class);
         assertEquals(user.getPassword(), "newPass");
     }
 }

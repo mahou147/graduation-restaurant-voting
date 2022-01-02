@@ -1,6 +1,7 @@
 package com.mahou.bootjava.restaurantvoting.web.user;
 
 import com.mahou.bootjava.restaurantvoting.model.User;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,22 +23,26 @@ import java.util.Optional;
 public class AdminUserController extends AbstractUserController {
     static final String URL = "/api/admin/users";
 
+    @Operation(summary = "get User")
     @Override
     @GetMapping("/{id}")
     public User get(@PathVariable int id) {
         return super.get(id);
     }
 
+    @Operation(summary = "get User by email")
     @GetMapping(value = "/by-email")
     public Optional<User> getByEmail(@RequestParam String email) {
         return super.findByEmailIgnoreCase(email);
     }
 
+    @Operation(summary = "get all Users by pages")
     @GetMapping
     public Page<User> getAll(@RequestParam(name = "p", defaultValue = "1") int pageIndex) {
         return super.findPage(pageIndex);
     }
 
+    @Operation(summary = "delete User")
     @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -45,6 +50,7 @@ public class AdminUserController extends AbstractUserController {
         super.delete(id);
     }
 
+    @Operation(summary = "create User")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createWithLocation(@Valid @RequestBody User user) {
         User created = super.create(user);
@@ -54,6 +60,7 @@ public class AdminUserController extends AbstractUserController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @Operation(summary = "update User")
     @Override
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -61,6 +68,7 @@ public class AdminUserController extends AbstractUserController {
         super.update(user, id);
     }
 
+    @Operation(summary = "set user`s enable")
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
