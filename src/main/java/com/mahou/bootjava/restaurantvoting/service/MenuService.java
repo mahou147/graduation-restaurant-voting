@@ -1,21 +1,21 @@
 package com.mahou.bootjava.restaurantvoting.service;
 
 import com.mahou.bootjava.restaurantvoting.error.NotFoundException;
-import com.mahou.bootjava.restaurantvoting.model.Dish;
 import com.mahou.bootjava.restaurantvoting.model.Menu;
-import com.mahou.bootjava.restaurantvoting.repository.DishRepository;
 import com.mahou.bootjava.restaurantvoting.repository.MenuRepository;
+import com.mahou.bootjava.restaurantvoting.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import static com.mahou.bootjava.restaurantvoting.util.ValidationUtil.*;
 
@@ -27,7 +27,7 @@ public class MenuService {
 
     private final MenuRepository menuRepository;
 
-    private final DishRepository dishRepository;
+    private final RestaurantRepository restaurantRepository;
 
     public Menu getWithDishes(int id) {
         log.info("get {}", id);
@@ -35,9 +35,9 @@ public class MenuService {
     }
 
     @Cacheable("menus")
-    public List<Menu> getAllWithDishesByRestaurantId(int id) {
+    public Page<Menu> getAllWithDishesByRestaurantId(int pageIndex, int pageSize, int id) {
         log.info("getAll");
-        return menuRepository.findAllByRestaurantId(id);
+        return menuRepository.findAllByRestaurantId(PageRequest.of(pageIndex, pageSize), id);
     }
 
     @Transactional
@@ -49,21 +49,25 @@ public class MenuService {
 
     @Transactional
     @CacheEvict(value = "menus", allEntries = true)
-    public Menu create(@RequestBody Menu menu) {
-        log.info("create {}", menu);
+    public Menu create(@RequestBody Menu menu, @RequestParam Integer restId) {
+        log.info("create for restaurnat {}", restId);
         checkNew(menu);
         Assert.notNull(menu, "Menu must not be null");
+        setRestaurant(menu, restId);
         return menuRepository.save(menu);
     }
 
     @Transactional
     @CacheEvict(value = "menus", allEntries = true)
-    public void update(@RequestBody Menu menu, @PathVariable int id) {
-        log.info("update menu {}", id);
+    public void update(@RequestBody Menu menu, @PathVariable int id, @RequestParam Integer restId) {
+        log.info("update {}", id);
         assureIdConsistent(menu, id);
         Assert.notNull(menu, "Menu must not be null");
-        List<Dish> dishes = menu.getDishes();
-        dishRepository.saveAll(dishes);
+        setRestaurant(menu, restId);
         checkNotFoundWithId(menuRepository.save(menu), id);
+    }
+
+    private void setRestaurant(Menu menu, Integer restId) {
+        menu.setRestaurant(checkNotFoundWithId(restaurantRepository.getById(restId), restId));
     }
 }

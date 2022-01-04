@@ -3,6 +3,8 @@ package com.mahou.bootjava.restaurantvoting.repository;
 import com.mahou.bootjava.restaurantvoting.model.Menu;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,7 +22,7 @@ public interface MenuRepository extends BaseRepository<Menu> {
 
     @EntityGraph(attributePaths = {"dishes"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT m FROM Menu m where m.restaurant.id=?1")
-    List<Menu> findAllByRestaurantId(Integer id);
+    Page<Menu> findAllByRestaurantId(Pageable pageable, int id);
 
     @Override
     @Modifying

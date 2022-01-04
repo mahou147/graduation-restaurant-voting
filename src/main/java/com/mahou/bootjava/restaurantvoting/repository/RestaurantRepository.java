@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface RestaurantRepository extends BaseRepository<Restaurant> {
@@ -23,15 +22,17 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
             "FROM Restaurant r")
     Page<RestaurantTo> getAll(Pageable pageable);
 
-    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.menus m JOIN FETCH m.dishes d")
-    List<Restaurant> getAllWithMenuArchive();
+    @Query(value = "SELECT r FROM Restaurant r LEFT JOIN FETCH r.menus m JOIN FETCH m.dishes d",
+            countQuery = "SELECT COUNT(r) FROM Restaurant r")
+    Page<Restaurant> getAllWithMenuArchive(Pageable pageable);
 
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.menus m JOIN FETCH m.dishes d WHERE r.id=?1")
     Restaurant getWithMenuArchive(int restaurantId);
 
     @Cacheable(value = "restaurants")
-    @Query("SELECT DISTINCT r FROM Restaurant r JOIN FETCH r.menus m JOIN FETCH m.dishes d WHERE m.date = CURRENT_DATE")
-    List<Restaurant> getAllWithMenuOfTheDay();
+    @Query(value = "SELECT DISTINCT r FROM Restaurant r JOIN FETCH r.menus m JOIN FETCH m.dishes d WHERE m.date = CURRENT_DATE",
+            countQuery = "SELECT COUNT(r) FROM Restaurant r")
+    Page<Restaurant> getAllWithMenuOfTheDay(Pageable pageable);
 
     @Query("SELECT r FROM Restaurant r JOIN FETCH r.menus m JOIN FETCH m.dishes d WHERE r.id=:id AND m.date = CURRENT_DATE")
     Restaurant getWithMenuOfTheDay(int id);

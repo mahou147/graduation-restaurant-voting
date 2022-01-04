@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.List;
-
 import static com.mahou.bootjava.restaurantvoting.util.ValidationUtil.*;
 
 @Slf4j
@@ -47,14 +45,14 @@ public class RestaurantService {
         return checkNotFoundWithId(repository.getWithMenuArchive(id), id);
     }
 
-    public List<Restaurant> getAllWithMenuOfTheDay() {
+    public Page<Restaurant> getAllWithMenuOfTheDay(int pageIndex, int pageSize) {
         log.info("get all with menu of the day");
-        return repository.getAllWithMenuOfTheDay();
+        return repository.getAllWithMenuOfTheDay(PageRequest.of(pageIndex, pageSize));
     }
 
-    public List<Restaurant> getAllWithMenuArchive() {
+    public Page<Restaurant> getAllWithMenuArchive(int pageIndex, int pageSize) {
         log.info("get all with menu archive");
-        return repository.getAllWithMenuArchive();
+        return repository.getAllWithMenuArchive(PageRequest.of(pageIndex, pageSize));
     }
 
     @Transactional

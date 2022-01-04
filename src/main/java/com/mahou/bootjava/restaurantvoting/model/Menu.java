@@ -34,11 +34,13 @@ public class Menu extends BaseEntity {
     @JsonBackReference
     private Restaurant restaurant;
 
-    public Menu(Integer id, LocalDate date,
-                Restaurant restaurant, List<Dish> dishes) {
+    public Menu(Integer id, LocalDate date, List<Dish> dishes) {
         super(id);
         this.date = date;
-        this.restaurant = restaurant;
         this.dishes = dishes;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 }

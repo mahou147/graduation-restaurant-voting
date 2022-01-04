@@ -37,11 +37,15 @@ public class Restaurant extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     private Set<Menu> menus;
 
-    public Restaurant(Integer id, String title, String address,  String phone) {
+    public Restaurant(Integer id, String title, String address, String phone) {
         super(id);
         this.title = title;
         this.address = address;
         this.phone = phone;
+    }
+
+    public void setMenus(Set<Menu> menus) {
+        this.menus = menus;
     }
 }
 

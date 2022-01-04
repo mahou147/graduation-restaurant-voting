@@ -17,7 +17,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = AdminRestaurantController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -48,8 +47,8 @@ public class AdminRestaurantController {
 
     @Operation(summary = "get all Restaurants with menu of the day")
     @GetMapping("/menu-of-the-day")
-    public List<Restaurant> getAllWithMenuOfTheDay() {
-        return service.getAllWithMenuOfTheDay();
+    public Page<Restaurant> getAllWithMenuOfTheDay(@RequestParam(name = "p", defaultValue = "1") int pageIndex) {
+        return service.getAllWithMenuOfTheDay(pageIndex - 1, 5);
     }
 
     @Operation(summary = "get Restaurant with menu archive")
@@ -60,8 +59,8 @@ public class AdminRestaurantController {
 
     @Operation(summary = "get all Restaurants with menu archive")
     @GetMapping("/menu-archive")
-    public List<Restaurant> getAllWithMenuArchive() {
-        return service.getAllWithMenuArchive();
+    public Page<Restaurant> getAllWithMenuArchive(@RequestParam(name = "p", defaultValue = "1") int pageIndex) {
+        return service.getAllWithMenuArchive(pageIndex - 1, 5);
     }
 
     @Operation(summary = "delete Restaurant")

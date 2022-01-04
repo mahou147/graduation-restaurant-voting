@@ -17,6 +17,12 @@ public class MatcherFactory {
         return new Matcher<>(clazz, assertion, iterableAssertion);
     }
 
+    public static <T> Matcher<T> usingEqualsComparator(Class<T> clazz) {
+        return usingAssertions(clazz,
+                (a, e) -> assertThat(a).isEqualTo(e),
+                (a, e) -> assertThat(a).isEqualTo(e));
+    }
+
     public static <T> Matcher<T> usingIgnoringFieldsComparator(Class<T> clazz, String... fieldsToIgnore) {
         return usingAssertions(clazz,
                 (a, e) -> assertThat(a).usingRecursiveComparison().ignoringFields(fieldsToIgnore).isEqualTo(e),

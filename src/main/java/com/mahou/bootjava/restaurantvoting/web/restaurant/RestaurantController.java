@@ -5,13 +5,9 @@ import com.mahou.bootjava.restaurantvoting.service.RestaurantService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = RestaurantController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -30,7 +26,7 @@ public class RestaurantController {
 
     @Operation(summary = "get all Restaurants with menu of the day")
     @GetMapping("/menu-of-the-day")
-    public List<Restaurant> getAllWithMenuOfTheDay() {
-        return service.getAllWithMenuOfTheDay();
+    public Page<Restaurant> getAllWithMenuOfTheDay(@RequestParam(name = "p", defaultValue = "1") int pageIndex) {
+        return service.getAllWithMenuOfTheDay(pageIndex - 1, 5);
     }
 }

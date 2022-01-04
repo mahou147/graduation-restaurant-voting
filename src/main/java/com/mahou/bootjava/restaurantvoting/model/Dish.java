@@ -29,17 +29,19 @@ public class Dish extends BaseEntity {
     @DecimalMax("100000")
     private BigDecimal price;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonBackReference
     private Menu menu;
 
-    public Dish(Integer id, String title, BigDecimal price, Menu menu) {
+    public Dish(Integer id, String title, BigDecimal price) {
         super(id);
         this.title = title;
         this.price = price;
+    }
+
+    public void setMenu(Menu menu) {
         this.menu = menu;
     }
 }
