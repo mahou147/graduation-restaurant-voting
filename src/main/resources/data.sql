@@ -13,12 +13,14 @@ FROM RESTAURANT;
 
 INSERT INTO USERS (EMAIL, FIRST_NAME, LAST_NAME, PASSWORD)
 VALUES ('user@gmail.com', 'User_First', 'User_Last', '{noop}password'),
-       ('tori.plaksunova@gmail.com', 'Viktoria', 'Plaksunova', '{noop}admin');
+       ('tori.plaksunova@gmail.com', 'Viktoria', 'Plaksunova', '{noop}admin'),
+       ('user3@mail.ru', 'User_Third', 'User_Last', '{noop}password3');
 
 INSERT INTO USER_ROLE (ROLE, USER_ID)
 VALUES ('USER', 1),
        ('ADMIN', 2),
-       ('USER', 2);
+       ('USER', 2),
+       ('USER', 3);
 
 INSERT INTO RESTAURANT (TITLE, ADDRESS, PHONE)
 VALUES ('Eataly', 'Kiyevskaya, 2, Moscow, 121059', 84956680679),
@@ -41,16 +43,12 @@ VALUES ('Capricciosa', 890, 1),
        ('San Pellegrino', 90, 2),
        ('Miso siru', 390, 3),
        ('Gyoza', 590, 3),
-       ('Mealk Oolong', 590, 3),
+       ('Milk Oolong', 590, 3),
        ('Tayaki', 190, 3),
        ('Takoyaki', 390, 4),
        ('Tom yam', 590, 4),
        ('Sencha', 590, 4);
 
 INSERT INTO VOTE (USER_ID, DATE, TIME, RESTAURANT_ID)
-VALUES (1, '2020-11-29', '10:00', 1),
-       (2, '2020-11-29', '10:00', 1),
-       (1, '2020-12-30', '10:00', 2),
-       (2, '2020-12-30', '10:00', 2),
-       (1, CURRENT_DATE, '10:00', 1),
+VALUES (1, CURRENT_DATE, '10:00', 1),
        (2, CURRENT_DATE, '10:00', 2);

@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static com.mahou.bootjava.restaurantvoting.UserTestData.*;
+import static com.mahou.bootjava.restaurantvoting.util.JsonUtil.*;
 import static com.mahou.bootjava.restaurantvoting.web.user.ProfileController.URL;
 import static com.mahou.bootjava.restaurantvoting.web.user.UniqueMailValidator.EXCEPTION_DUPLICATE_EMAIL;
 import static org.hamcrest.Matchers.containsString;
@@ -59,7 +60,7 @@ class ProfileControllerTest extends AbstractControllerTest {
         User newUser = UserUtil.createNewFromTo(newTo);
         ResultActions action = perform(MockMvcRequestBuilders.post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newTo)))
+                .content(writeValue(newTo)))
                 .andDo(print())
                 .andExpect(status().isCreated());
 
@@ -75,7 +76,7 @@ class ProfileControllerTest extends AbstractControllerTest {
     void update() throws Exception {
         UserTo updatedTo = new UserTo(null, USER_MAIL, "newName", "newSurname", "newPassword");
         perform(MockMvcRequestBuilders.put(URL).contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updatedTo)))
+                .content(writeValue(updatedTo)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
@@ -87,7 +88,7 @@ class ProfileControllerTest extends AbstractControllerTest {
         UserTo newTo = new UserTo(null, null, null, null, null);
         perform(MockMvcRequestBuilders.post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newTo)))
+                .content(writeValue(newTo)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
@@ -98,7 +99,7 @@ class ProfileControllerTest extends AbstractControllerTest {
         UserTo updatedTo = new UserTo(null, "password", null, null, null);
         perform(MockMvcRequestBuilders.put(URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updatedTo)))
+                .content(writeValue(updatedTo)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
@@ -109,7 +110,7 @@ class ProfileControllerTest extends AbstractControllerTest {
         UserTo updatedTo = new UserTo(null, ADMIN_MAIL, "firstName", "newSurname", "newPassword");
         perform(MockMvcRequestBuilders.put(URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updatedTo)))
+                .content(writeValue(updatedTo)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(content().string(containsString(EXCEPTION_DUPLICATE_EMAIL)));

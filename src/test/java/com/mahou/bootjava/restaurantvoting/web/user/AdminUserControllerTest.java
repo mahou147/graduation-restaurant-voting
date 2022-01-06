@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 import static com.mahou.bootjava.restaurantvoting.UserTestData.*;
 import static com.mahou.bootjava.restaurantvoting.web.user.UniqueMailValidator.EXCEPTION_DUPLICATE_EMAIL;
@@ -68,7 +67,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJsonWithoutPageable(List.of(admin, user)));
+                .andExpect(USER_MATCHER.contentJsonWithoutPageable(users));
     }
 
     @Test

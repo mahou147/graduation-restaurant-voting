@@ -2,7 +2,6 @@ package com.mahou.bootjava.restaurantvoting.web.menu;
 
 import com.mahou.bootjava.restaurantvoting.model.Menu;
 import com.mahou.bootjava.restaurantvoting.service.MenuService;
-import com.mahou.bootjava.restaurantvoting.web.dish.AdminDishController;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +33,8 @@ public class AdminMenuController {
 
     @Operation(summary = "get all Menus with dishes by restaurant")
     @GetMapping("/by-restaurant/{id}")
-    public Page<Menu> getAllWithDishesByRestaurantId(@RequestParam(name = "p", defaultValue = "1") int pageIndex, @PathVariable int id) {
+    public Page<Menu> getAllWithDishesByRestaurantId(@RequestParam(name = "p", defaultValue = "1") int pageIndex,
+                                                     @PathVariable int id) {
         return service.getAllWithDishesByRestaurantId(pageIndex - 1, 5, id);
     }
 

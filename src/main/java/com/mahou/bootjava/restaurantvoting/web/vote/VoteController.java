@@ -41,8 +41,10 @@ public class VoteController {
 
     @Operation(summary = "create authentication user`s Vote")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Vote> createWithLocation(@Valid @RequestBody Vote vote, @AuthenticationPrincipal AuthUser authUser) {
-        Vote created = voteService.create(vote, authUser);
+    public ResponseEntity<Vote> createWithLocation(@Valid @RequestBody Vote vote,
+                                                   @AuthenticationPrincipal AuthUser authUser,
+                                                   @RequestParam Integer restId) {
+        Vote created = voteService.create(vote, authUser, restId);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -53,7 +55,8 @@ public class VoteController {
     @Operation(summary = "update authentication user`s Vote")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody Vote vote, @AuthenticationPrincipal AuthUser authUser) {
-        voteService.update(vote, authUser);
+    public void update(@Valid @RequestBody Vote vote, @AuthenticationPrincipal AuthUser authUser,
+                       @RequestParam Integer restId) {
+        voteService.update(vote, authUser, restId);
     }
 }

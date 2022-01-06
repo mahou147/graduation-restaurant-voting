@@ -37,7 +37,7 @@ public class DishTestData {
 
     public static final Dish dish9 = new Dish(DISH9_ID, "Miso siru", new BigDecimal(890));
     public static final Dish dish10 = new Dish(DISH10_ID, "Gyoza", new BigDecimal(490));
-    public static final Dish dish11 = new Dish(DISH11_ID, "Mealk Oolong", new BigDecimal(90));
+    public static final Dish dish11 = new Dish(DISH11_ID, "Milk Oolong", new BigDecimal(90));
     public static final Dish dish12 = new Dish(DISH12_ID, "Tayaki", new BigDecimal(90));
 
     public static final Dish dish13 = new Dish(DISH13_ID, "Takoyaki", new BigDecimal(790));

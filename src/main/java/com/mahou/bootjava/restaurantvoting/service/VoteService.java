@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import static com.mahou.bootjava.restaurantvoting.util.ValidationUtil.assureIdConsistent;
 import static com.mahou.bootjava.restaurantvoting.util.ValidationUtil.checkNew;
+import static com.mahou.bootjava.restaurantvoting.util.ValidationUtil.checkNotFoundWithId;
 
 @Slf4j
 @Service
@@ -42,21 +42,24 @@ public class VoteService {
     }
 
     @Transactional
-    public Vote create(Vote vote, @AuthenticationPrincipal AuthUser authUser) {
+    public Vote create(Vote vote, @AuthenticationPrincipal AuthUser authUser, Integer restId) {
         log.info("create {} user`s vote", authUser.getId());
         checkNew(vote);
         Assert.notNull(vote, "dish must not be null");
         vote.setUser(userRepository.getById(authUser.getId()));
+        setRestaurant(vote, restId);
         return voteRepository.save(vote);
     }
 
     @Transactional
-    public void update(Vote vote, @AuthenticationPrincipal AuthUser authUser) {
+    public void update(Vote vote, @AuthenticationPrincipal AuthUser authUser, Integer restId) {
         log.info("update {} user`s vote", authUser.getId());
-        assureIdConsistent(vote.getUser(), authUser.getId());
         Assert.notNull(vote, "vote must not be null");
-        restaurantRepository.findById(vote.getRestaurant().id()).orElseThrow(() ->
-                new NotFoundException("Vote not found, id: " + vote.getRestaurant().id()));
+        setRestaurant(vote, restId);
         voteRepository.save(vote);
+    }
+
+    private void setRestaurant(Vote vote, Integer restId) {
+        vote.setRestaurant(checkNotFoundWithId(restaurantRepository.getById(restId), restId));
     }
 }

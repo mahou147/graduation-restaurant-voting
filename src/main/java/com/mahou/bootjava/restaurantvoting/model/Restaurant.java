@@ -1,5 +1,6 @@
 package com.mahou.bootjava.restaurantvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@JsonIgnoreProperties(value = "hibernateLazyInitializer")
 @Table(name = "restaurant", uniqueConstraints = {@UniqueConstraint(columnNames = "address",
         name = "restaurants_unique_address_idx")})
 public class Restaurant extends BaseEntity {

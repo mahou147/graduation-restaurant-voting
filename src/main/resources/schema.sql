@@ -63,7 +63,7 @@ CREATE TABLE VOTE
 (
     id                INTEGER       AUTO_INCREMENT,
     date              DATE          NOT NULL DEFAULT CURRENT_DATE ON UPDATE CURRENT_DATE,
-    time              TIME          NOT NULL DEFAULT CURRENT_TIME ON UPDATE CURRENT_TIME,
+    time              TIME          NOT NULL,
     user_id           INTEGER       NOT NULL,
     restaurant_id     INTEGER       NOT NULL,
     PRIMARY KEY (id),

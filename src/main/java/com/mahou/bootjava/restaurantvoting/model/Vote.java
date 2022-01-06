@@ -1,6 +1,7 @@
 package com.mahou.bootjava.restaurantvoting.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 import lombok.*;
 import org.hibernate.annotations.GenerationTime;
@@ -26,8 +27,6 @@ public class Vote extends BaseEntity {
     private LocalDate date;
 
     @NotNull
-    //Use GenerationTime.NEVER when testing vote update after 11:00 AM real time
-    @org.hibernate.annotations.Generated(GenerationTime.NEVER)
     @Column(name = "time", nullable = false)
     private LocalTime time;
 
@@ -48,5 +47,9 @@ public class Vote extends BaseEntity {
         super(id);
         this.date = date;
         this.time = time;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 }

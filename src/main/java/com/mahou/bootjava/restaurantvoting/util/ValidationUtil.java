@@ -66,7 +66,8 @@ public class ValidationUtil {
         return e.getLocalizedMessage() != null ? e.getLocalizedMessage() : e.getClass().getName();
     }
 
-    public static Throwable logAndGetRootCause(Logger log, HttpServletRequest req, Exception e, boolean logStackTrace, ErrorType errorType) {
+    public static Throwable logAndGetRootCause(Logger log, HttpServletRequest req, Exception e, boolean logStackTrace,
+                                               ErrorType errorType) {
         Throwable rootCause = ValidationUtil.getRootCause(e);
         if (logStackTrace) {
             log.error(errorType + " at request " + req.getRequestURL(), rootCause);

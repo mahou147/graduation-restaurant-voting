@@ -38,7 +38,8 @@ public class AdminDishController {
 
     @Operation(summary = "get Dishes by menu")
     @GetMapping("/by-menu/{menuId}")
-    public Page<Dish> getAllByMenuId(@RequestParam(name = "p", defaultValue = "1") int pageIndex, @PathVariable Integer menuId) {
+    public Page<Dish> getAllByMenuId(@RequestParam(name = "p", defaultValue = "1") int pageIndex,
+                                     @PathVariable Integer menuId) {
         log.info("getAll");
         return repository.getAllByMenuId(PageRequest.of(pageIndex - 1, 5), menuId);
     }
