@@ -9,7 +9,7 @@ The task is:
 Build a voting system for deciding where to have lunch.
 
 * 2 types of users: admin and regular users
-* Admin can input a restaurant and it's lunch menu of the day (2-5 items usually, just a dish name and price)
+* Admin can input a restaurant and it's lunch menu of the day (2-5 items usually, just a menuItem name and price)
 * Menu changes each day (admins do the updates)
 * Users can vote on which restaurant they want to have lunch at
 * Only one vote counted per user
@@ -20,5 +20,17 @@ Build a voting system for deciding where to have lunch.
 Each restaurant provides a new menu each day.
 
 -----------------------------
+
+## Installing
+    git clone https://github.com/mahou147/graduation-restaurant-voting.git
+## Run
+    mvn spring-boot:run
+## Credentials
+    | Username                  |  Password |    Role    |
+    |---------------------------|-----------|------------|
+    | user@gmail.com            | password  |    USER    |
+    | tori.plaksunova@gmail.com |   admin   |ADMIN / USER|
+    | user3@mail.ru             | password3 |    USER    |
+
 ### API documentation
 [Swagger UI](http://localhost:8080/swagger-ui.html)

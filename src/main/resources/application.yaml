@@ -7,6 +7,10 @@ spring:
     hibernate:
       ddl-auto: create
     properties:
+      javax:
+        persistence:
+          validation:
+            mode: none
       #  http://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#configurations
       hibernate:
         format_sql: true
@@ -29,7 +33,7 @@ spring:
     visibility.is-getter: none
 
   cache:
-    cache-names: users, restaurants, menus
+    cache-names: restaurants, menus, menuItems
     caffeine:
       spec: maximumSize=5000,expireAfterAccess=60s
   main:
@@ -44,7 +48,7 @@ spring:
 logging:
   level:
     root: WARN
-    com.mahou.bootjava.restaurantvoting: INFO
+    com.github.mahou147.voting: INFO
     org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
 
 server:
