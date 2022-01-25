@@ -73,7 +73,7 @@ class AdminMenuControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void createWithLocation() throws Exception {
-        Menu newMenu = new Menu(null, MenuTestData.TOMORROW);
+        Menu newMenu = new Menu(null, TOMORROW);
         newMenu.setRestaurant(eataly);
         ResultActions action = perform(MockMvcRequestBuilders.post(URL)
                 .param("restId", "1")
@@ -91,7 +91,7 @@ class AdminMenuControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void update() throws Exception {
         Menu updated = eataly_current_menu;
-        updated.setActualDate(MenuTestData.TOMORROW);
+        updated.setActualDate(TOMORROW);
         updated.setRestaurant(ramen);
         perform(MockMvcRequestBuilders.put(URL + EATALY_CURRENT_MENU_ID).contentType(MediaType.APPLICATION_JSON)
                 .param("restId", "2")

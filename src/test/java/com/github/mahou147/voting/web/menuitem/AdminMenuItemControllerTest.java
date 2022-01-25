@@ -1,4 +1,4 @@
-package com.github.mahou147.voting.web.menuItem;
+package com.github.mahou147.voting.web.menuitem;
 
 import com.github.mahou147.voting.UserTestData;
 import com.github.mahou147.voting.model.MenuItem;

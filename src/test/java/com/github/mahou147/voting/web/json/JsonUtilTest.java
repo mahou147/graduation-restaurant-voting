@@ -34,10 +34,10 @@ public class JsonUtilTest extends AbstractControllerTest {
 
     @Test
     void writeOnlyAccess() {
-        String json = JsonUtil.writeValue(UserTestData.user);
+        String json = JsonUtil.writeValue(user);
         System.out.println(json);
         assertThat(json, not(containsString("password")));
-        String jsonWithPass = UserTestData.jsonWithPassword(UserTestData.user, "newPass");
+        String jsonWithPass = UserTestData.jsonWithPassword(user, "newPass");
         System.out.println(jsonWithPass);
         User user = JsonUtil.readValue(jsonWithPass, User.class);
         assertEquals(user.getPassword(), "newPass");
